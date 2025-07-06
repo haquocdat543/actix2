@@ -10,6 +10,6 @@ POST {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
 
 {
 	"name": "haquocdat",
-	"email": "haquocdat@gmail",
+	"email": "haquocdat@gmail.com",
 	"password": "12345678"
 }
