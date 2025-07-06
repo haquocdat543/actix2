@@ -6,10 +6,15 @@ version = 4
 name = "actix"
 version = "0.1.0"
 dependencies = [
+ "actix-rt",
  "actix-web",
+ "dotenvy",
  "sea-orm",
  "sea-orm-migration",
+ "serde",
+ "serde_json",
  "tokio",
+ "uuid",
 ]
 
 [[package]]
@@ -99,6 +104,7 @@ version = "2.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "24eda4e2a6e042aa4e55ac438a2ae052d3b5da0ecf83d7411e1a368946925208"
 dependencies = [
+ "actix-macros",
  "futures-core",
  "tokio",
 ]
@@ -3076,6 +3082,7 @@ version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3cf4199d1e5d15ddd86a694e4d0dffa9c323ce759fea589f00fef9d81cc1931d"
 dependencies = [
+ "getrandom 0.3.3",
  "js-sys",
  "serde",
  "wasm-bindgen",
