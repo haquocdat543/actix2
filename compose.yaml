@@ -1,0 +1,56 @@
+version: "3.5"
+
+services:
+  # auth:
+  #   container_name: auth
+  #   image: authen:v1
+  #   restart: always
+  #   env_file: ./.env
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #   networks:
+  #     - postgres
+  #   ports:
+  #     - 127.0.0.1:8080:8080
+  #   depends_on:
+  #     - postgres
+  #     - pgadmin
+
+  postgres:
+    container_name: postgres-sql-actix
+    image: postgres
+    environment:
+      POSTGRES_USER: develop
+      POSTGRES_PASSWORD: effimatebackend
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-actix:/data/postgres
+    ports:
+      - "0.0.0.0:5433:5432"
+    networks:
+      - actix
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin-actix
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-actix:/var/lib/pgadmin
+    ports:
+      - "0.0.0.0:5051:80"
+    networks:
+      - actix
+    restart: unless-stopped
+
+networks:
+  actix:
+    driver: bridge
+
+volumes:
+  postgres-actix:
+  pgadmin-actix:
