@@ -3,4 +3,4 @@
 @PORT = 8089
 
 ### GET api/user/all
-GET {{SCHEME}}://{{HOST}}:{{PORT}}/
+GET {{SCHEME}}://{{HOST}}:{{PORT}}/api/user/all
