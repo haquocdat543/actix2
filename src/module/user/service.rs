@@ -8,7 +8,7 @@ pub struct UserService;
 impl UserService {
     pub async fn get_users(
         db: &DatabaseConnection,
-    ) -> Result<Vec<user::Model>, sea_orm::DbErr> {
+    ) -> Result<Vec<super::repository::UserInfo>, sea_orm::DbErr> {
         UserRepository::find_all(db).await
     }
 

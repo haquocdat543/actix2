@@ -1,12 +1,26 @@
 use super::entity::user;
 use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
+use sea_orm::{FromQueryResult, QuerySelect};
+use serde::Serialize;
 use uuid::Uuid; // auto-gen or manually written entity
+
+#[derive(Debug, FromQueryResult, Serialize)]
+pub struct UserInfo {
+    email: String,
+    name: String,
+}
 
 pub struct UserRepository;
 
 impl UserRepository {
-    pub async fn find_all(db: &DatabaseConnection) -> Result<Vec<user::Model>, sea_orm::DbErr> {
-        user::Entity::find().all(db).await
+    pub async fn find_all(db: &DatabaseConnection) -> Result<Vec<UserInfo>, sea_orm::DbErr> {
+        user::Entity::find()
+            .select_only()
+            .column(user::Column::Email)
+            .column(user::Column::Name)
+            .into_model::<UserInfo>()
+            .all(db)
+            .await
     }
 
     pub async fn find_by_id(
