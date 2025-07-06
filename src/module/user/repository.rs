@@ -37,7 +37,6 @@ impl UserRepository {
             name: Set(name),
             email: Set(email),
             password: Set(password),
-            ..Default::default()
         };
         user.insert(db).await
     }
