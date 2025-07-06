@@ -1,4 +1,5 @@
 use super::entity::user;
+use bcrypt::{DEFAULT_COST, hash};
 use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
 use sea_orm::{FromQueryResult, QuerySelect};
 use serde::Serialize;
@@ -46,11 +47,15 @@ impl UserRepository {
         email: String,
         password: String,
     ) -> Result<user::Model, sea_orm::DbErr> {
+
+        let hashed_password = hash(&password, DEFAULT_COST)
+            .map_err(|e| sea_orm::DbErr::Custom(format!("Hashing error: {}", e)))?;
+
         let user = user::ActiveModel {
             id: Set(Uuid::new_v4()),
             name: Set(name),
             email: Set(email),
-            password: Set(password),
+            password: Set(hashed_password),
         };
         user.insert(db).await
     }
