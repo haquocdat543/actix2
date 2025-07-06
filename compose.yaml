@@ -1,21 +1,21 @@
 version: "3.5"
 
 services:
-  # auth:
-  #   container_name: auth
-  #   image: authen:v1
-  #   restart: always
-  #   env_file: ./.env
-  #   build:
-  #     context: ./
-  #     dockerfile: Dockerfile
-  #   networks:
-  #     - postgres
-  #   ports:
-  #     - 127.0.0.1:8080:8080
-  #   depends_on:
-  #     - postgres
-  #     - pgadmin
+  auth:
+    container_name: auth-actix
+    image: authen:v1
+    restart: always
+    env_file: ./.env
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    networks:
+      - actix
+    ports:
+      - 127.0.0.1:8090:8090
+    depends_on:
+      - postgres
+      - pgadmin
 
   postgres:
     container_name: postgres-sql-actix
