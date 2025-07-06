@@ -14,7 +14,12 @@ pub async fn create(
     }
 
     let req = req.into_inner();
-    match UserService::register_user(db.get_ref(), req.name, req.email, req.password).await {
+    match UserService::register_user(
+        db.get_ref(),
+        req.name,
+        req.email,
+        req.password,
+    ).await {
         Ok(user) => HttpResponse::Created().json(user),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
