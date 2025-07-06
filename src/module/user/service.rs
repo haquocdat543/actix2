@@ -6,7 +6,7 @@ use uuid::Uuid;
 pub struct UserService;
 
 impl UserService {
-    pub async fn get_all_users(
+    pub async fn get_users(
         db: &DatabaseConnection,
     ) -> Result<Vec<user::Model>, sea_orm::DbErr> {
         UserRepository::find_all(db).await
@@ -19,7 +19,7 @@ impl UserService {
         UserRepository::find_by_id(db, id).await
     }
 
-    pub async fn register_user(
+    pub async fn create(
         db: &DatabaseConnection,
         name: String,
         email: String,

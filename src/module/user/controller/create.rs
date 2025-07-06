@@ -14,7 +14,7 @@ pub async fn create(
     }
 
     let req = req.into_inner();
-    match UserService::register_user(
+    match UserService::create(
         db.get_ref(),
         req.name,
         req.email,
