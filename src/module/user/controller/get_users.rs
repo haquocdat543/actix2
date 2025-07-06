@@ -1,7 +1,7 @@
 use actix_web::{get, post, delete, web, HttpResponse, Responder};
 use sea_orm::DatabaseConnection;
 use uuid::Uuid;
-use crate::module::user::{service::UserService, model::RegisterUserRequest};
+use crate::module::user::{service::UserService, dto::CreateUserDTO};
 
 #[get("/all")]
 pub async fn get_all_users(db: web::Data<DatabaseConnection>) -> impl Responder {
@@ -26,7 +26,7 @@ pub async fn get_user_by_id(
 #[post("/")]
 pub async fn register_user(
     db: web::Data<DatabaseConnection>,
-    req: web::Json<RegisterUserRequest>,
+    req: web::Json<CreateUserDTO>,
 ) -> impl Responder {
     let req = req.into_inner();
     match UserService::register_user(db.get_ref(), req.name, req.email, req.password).await {
@@ -35,12 +35,12 @@ pub async fn register_user(
     }
 }
 
-#[delete("/{name}")]
+#[delete("/{id}")]
 pub async fn delete_user(
     db: web::Data<DatabaseConnection>,
     id: web::Path<Uuid>,
 ) -> impl Responder {
-    match UserService::remove_user(db.get_ref(), name.into_inner()).await {
+    match UserService::remove_user(db.get_ref(), id.into_inner()).await {
         Ok(_) => HttpResponse::Ok().body("User deleted"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }

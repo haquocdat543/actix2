@@ -1,5 +1,5 @@
 use crate::module::user::repository::UserRepository;
-use entity::users;
+use super::entity::user;
 use sea_orm::DatabaseConnection;
 use uuid::Uuid;
 
@@ -8,14 +8,14 @@ pub struct UserService;
 impl UserService {
     pub async fn get_all_users(
         db: &DatabaseConnection,
-    ) -> Result<Vec<users::Model>, sea_orm::DbErr> {
+    ) -> Result<Vec<user::Model>, sea_orm::DbErr> {
         UserRepository::find_all(db).await
     }
 
     pub async fn get_user_by_id(
         db: &DatabaseConnection,
         id: Uuid,
-    ) -> Result<Option<users::Model>, sea_orm::DbErr> {
+    ) -> Result<Option<user::Model>, sea_orm::DbErr> {
         UserRepository::find_by_id(db, id).await
     }
 
@@ -24,7 +24,7 @@ impl UserService {
         name: String,
         email: String,
         password: String,
-    ) -> Result<users::Model, sea_orm::DbErr> {
+    ) -> Result<user::Model, sea_orm::DbErr> {
         // Here you can add logic like:
         // - Check email existence
         // - Hash password
