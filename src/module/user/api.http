@@ -13,3 +13,11 @@ POST {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
 	"email": "haquocdat@gmail.com",
 	"password": "12345678"
 }
+
+### POST api/user/login
+POST {{SCHEME}}://{{HOST}}:{{PORT}}/api/user/login
+
+{
+	"name": "haquocdat",
+	"password": "12345678"
+}

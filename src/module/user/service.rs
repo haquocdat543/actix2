@@ -1,6 +1,7 @@
-use crate::module::user::repository::UserRepository;
 use super::entity::user;
-use sea_orm::DatabaseConnection;
+use crate::module::user::repository::UserRepository;
+use bcrypt::verify;
+use sea_orm::{DatabaseConnection, DbErr};
 use uuid::Uuid;
 
 pub struct UserService;
@@ -12,6 +13,27 @@ impl UserService {
         UserRepository::get_users(db).await
     }
 
+    pub async fn login(
+        db: &DatabaseConnection,
+        name: String,
+        password: String,
+    ) -> Result<bool, DbErr> {
+        let stored_password = UserRepository::get_password(db, name.clone()).await?;
+
+        match stored_password {
+            Some(hash) => {
+                match verify(&password, &hash.password) {
+                    Ok(true) => Ok(true),   // Password correct
+                    Ok(false) => Ok(false), // Password incorrect
+                    Err(e) => Err(DbErr::Custom(format!(
+                        "Password verification failed: {}",
+                        e
+                    ))),
+                }
+            }
+            None => Err(DbErr::RecordNotFound(format!("User '{}' not found", name))),
+        }
+    }
     pub async fn get_user_by_id(
         db: &DatabaseConnection,
         id: Uuid,

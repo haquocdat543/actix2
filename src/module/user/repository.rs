@@ -7,6 +7,11 @@ use serde::Serialize;
 use uuid::Uuid; // auto-gen or manually written entity
 
 #[derive(Debug, FromQueryResult, Serialize)]
+pub struct Password {
+    pub password: String,
+}
+
+#[derive(Debug, FromQueryResult, Serialize)]
 pub struct UserInfo {
     email: String,
     name: String,
@@ -28,6 +33,19 @@ impl UserRepository {
             .column(user::Column::DeletedAt)
             .into_model::<UserInfo>()
             .all(db)
+            .await
+    }
+
+    pub async fn get_password(
+        db: &DatabaseConnection,
+        name: String,
+    ) -> Result<Option<Password>, sea_orm::DbErr> {
+        user::Entity::find()
+            .filter(user::Column::Name.eq(name))
+            .select_only()
+            .column(user::Column::Password)
+            .into_model::<Password>()
+            .one(db)
             .await
     }
 
