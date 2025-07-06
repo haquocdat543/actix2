@@ -1,0 +1,6 @@
+@SCHEME = http
+@HOST = localhost
+@PORT = 8089
+
+### GET api/user/all
+GET {{SCHEME}}://{{HOST}}:{{PORT}}/
