@@ -18,7 +18,7 @@ pub struct UserInfo {
 pub struct UserRepository;
 
 impl UserRepository {
-    pub async fn find_all(db: &DatabaseConnection) -> Result<Vec<UserInfo>, sea_orm::DbErr> {
+    pub async fn get_users(db: &DatabaseConnection) -> Result<Vec<UserInfo>, sea_orm::DbErr> {
         user::Entity::find()
             .select_only()
             .column(user::Column::Email)

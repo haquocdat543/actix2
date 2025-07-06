@@ -9,7 +9,7 @@ impl UserService {
     pub async fn get_users(
         db: &DatabaseConnection,
     ) -> Result<Vec<super::repository::UserInfo>, sea_orm::DbErr> {
-        UserRepository::find_all(db).await
+        UserRepository::get_users(db).await
     }
 
     pub async fn get_user_by_id(
