@@ -16,6 +16,8 @@ dotenvy = "0.15.7"
 validator = { version = "0.20.0", features = ["derive"] }
 bcrypt = "0.17.0"
 chrono = { version = "0.4.41", features = ["serde"] }  # ← must be here!
+env_logger = "0.11.8"         # or latest
+log = "0.4.27"
 
 [[bin]]
 name = "migration-bin"  # <-- renamed to avoid conflict
