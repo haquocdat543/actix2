@@ -20,7 +20,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(db_data.clone()) // ✅ Share it with app
             .service(router::api_scope(db_data.clone())) // Mount /api
     })
-    .bind("127.0.0.1:8089")?
+    .bind("127.0.0.1:8090")?
     .run()
     .await
 }

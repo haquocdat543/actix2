@@ -1,6 +1,15 @@
 @SCHEME = http
 @HOST = localhost
-@PORT = 8089
+@PORT = 8090
 
 ### GET api/user/all
 GET {{SCHEME}}://{{HOST}}:{{PORT}}/api/user/all
+
+### POST api/user
+POST {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
+
+{
+	"name": "haquocdat",
+	"email": "haquocdat@gmail",
+	"password": "12345678"
+}
