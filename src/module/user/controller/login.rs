@@ -17,7 +17,22 @@ pub async fn login(db: web::Data<DatabaseConnection>, req: web::Json<LoginDTO>) 
 
     let req = req.into_inner();
     match UserService::login(db.get_ref(), req.name, req.password).await {
-        Ok(user) => HttpResponse::Created().json(user),
+        Ok(user) => match user {
+            true => {
+                let login_status = Response {
+                    message: "Login successfully".to_string(),
+                };
+
+                HttpResponse::Created().json(login_status)
+            }
+            false => {
+                let login_status = Response {
+                    message: "Login failed".to_string(),
+                };
+
+                HttpResponse::Created().json(login_status)
+            }
+        },
         Err(err) => {
             let error_response = Response {
                 message: err.to_string(),
