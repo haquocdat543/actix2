@@ -164,3 +164,8 @@ pub struct PutInfoDTO {
     ))]
     pub address: Option<String>,
 }
+
+pub enum InfoDTO {
+    Patch(PatchInfoDTO),
+    Put(PutInfoDTO),
+}

@@ -54,6 +54,16 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoYXF1b2NkY
 
 {
 	"dob": "2004-10-26",
-	"role": "Manager",
-	"address": "United States"
+	"role": "Manager"
+}
+
+### PATCH api/user
+PUT {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoYXF1b2NkYXQiLCJleHAiOjE3NTE5NTEyNDZ9.KC0e1Bw-zMakOI0Y5aaxkxaNaycRRP7lWd1-Us3CEcc
+
+{
+	"dob": "2004-10-26",
+	"role": "Director",
+	"address": "Deutschland"
 }

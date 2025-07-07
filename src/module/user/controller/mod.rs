@@ -6,3 +6,4 @@ pub mod get_users;
 pub mod login;
 pub mod update_password;
 pub mod patch_info;
+pub mod put_info;

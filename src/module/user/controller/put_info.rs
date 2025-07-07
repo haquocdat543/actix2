@@ -1,19 +1,17 @@
-use crate::{
-    module::user::{
-        dto::{InfoDTO, PatchInfoDTO},
-        service::UserService,
-    },
-    share::jwt::Claims,
+use crate::module::user::{
+    dto::{InfoDTO, PutInfoDTO},
+    service::UserService,
 };
+use crate::share::jwt::Claims;
 use actix_web::HttpRequest;
 use actix_web::{HttpMessage, HttpResponse, Responder, web};
 use sea_orm::DatabaseConnection;
 use validator::Validate;
 
-pub async fn patch_info(
+pub async fn put_info(
     req: HttpRequest,
     db: web::Data<DatabaseConnection>,
-    body: web::Json<PatchInfoDTO>,
+    body: web::Json<PutInfoDTO>,
 ) -> impl Responder {
     if let Err(errors) = body.validate() {
         return HttpResponse::BadRequest().json(errors);
@@ -25,9 +23,9 @@ pub async fn patch_info(
     };
 
     let body = body.into_inner();
-    match UserService::update_info(db.get_ref(), username, InfoDTO::Patch(body)).await {
-        Ok(true) => HttpResponse::Ok().body("Info patched"),
-        Ok(false) => HttpResponse::Ok().body("Patch failed"),
+    match UserService::update_info(db.get_ref(), username, InfoDTO::Put(body)).await {
+        Ok(true) => HttpResponse::Ok().body("Info putted"),
+        Ok(false) => HttpResponse::Ok().body("Put failed"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

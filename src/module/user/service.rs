@@ -1,4 +1,7 @@
-use super::{dto::PatchInfoDTO, entity::user};
+use super::{
+    dto::InfoDTO,
+    entity::user,
+};
 use crate::module::user::repository::UserRepository;
 use bcrypt::verify;
 use sea_orm::{DatabaseConnection, DbErr};
@@ -120,11 +123,21 @@ impl UserService {
     pub async fn update_info(
         db: &DatabaseConnection,
         name: String,
-        dto: PatchInfoDTO,
+        dto: InfoDTO,
     ) -> Result<bool, DbErr> {
-        match UserRepository::update_info(db, name, dto).await {
-            Ok(updated) => Ok(updated),
-            Err(e) => Err(e),
+        match dto {
+            InfoDTO::Patch(patch_data) => {
+                match UserRepository::update_info(db, name, InfoDTO::Patch(patch_data)).await {
+                    Ok(updated) => Ok(updated),
+                    Err(e) => Err(e),
+                }
+            }
+            InfoDTO::Put(put_data) => {
+                match UserRepository::update_info(db, name, InfoDTO::Put(put_data)).await {
+                    Ok(updated) => Ok(updated),
+                    Err(e) => Err(e),
+                }
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-use super::dto::PatchInfoDTO;
+use super::dto::InfoDTO;
 use super::entity::user;
 use bcrypt::{DEFAULT_COST, hash};
 use chrono::{DateTime, NaiveDate, Utc};
@@ -170,27 +170,52 @@ impl UserRepository {
     pub async fn update_info(
         db: &DatabaseConnection,
         name: String,
-        dto: PatchInfoDTO,
+        dto: InfoDTO,
     ) -> Result<bool, DbErr> {
-        // 1. Find user by name
-        if let Some(user) = user::Entity::find()
-            .filter(user::Column::Name.eq(name))
-            .one(db)
-            .await?
-        {
-            // 3. Update fields
-            let mut active: user::ActiveModel = user.into();
-            active.dob = Set(dto.dob);
-            active.role = Set(dto.role);
-            active.address = Set(dto.address);
-            active.updated_at = Set(Utc::now());
+        match dto {
+            InfoDTO::Patch(patch_data) => {
+                if let Some(user) = user::Entity::find()
+                    .filter(user::Column::Name.eq(name))
+                    .one(db)
+                    .await?
+                {
+                    // 3. Update fields
+                    let mut active: user::ActiveModel = user.into();
+                    active.dob = Set(patch_data.dob);
+                    active.role = Set(patch_data.role);
+                    active.address = Set(patch_data.address);
+                    active.updated_at = Set(Utc::now());
 
-            // 4. Commit update
-            active.update(db).await?;
+                    // 4. Commit update
+                    active.update(db).await?;
 
-            Ok(true)
-        } else {
-            Ok(false) // user not found
+                    Ok(true)
+                } else {
+                    Ok(false) // user not found
+                }
+            }
+            InfoDTO::Put(put_data) => {
+                // 1. Find user by name
+                if let Some(user) = user::Entity::find()
+                    .filter(user::Column::Name.eq(name))
+                    .one(db)
+                    .await?
+                {
+                    // 3. Update fields
+                    let mut active: user::ActiveModel = user.into();
+                    active.dob = Set(put_data.dob);
+                    active.role = Set(put_data.role);
+                    active.address = Set(put_data.address);
+                    active.updated_at = Set(Utc::now());
+
+                    // 4. Commit update
+                    active.update(db).await?;
+
+                    Ok(true)
+                } else {
+                    Ok(false) // user not found
+                }
+            }
         }
     }
 
