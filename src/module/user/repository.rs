@@ -1,5 +1,5 @@
-use bcrypt::{hash, DEFAULT_COST};
 use super::entity::user;
+use bcrypt::{DEFAULT_COST, hash};
 use chrono::{DateTime, Utc};
 use sea_orm::DbErr;
 use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
@@ -34,6 +34,23 @@ impl UserRepository {
             .column(user::Column::DeletedAt)
             .into_model::<UserInfo>()
             .all(db)
+            .await
+    }
+
+    pub async fn get_user(
+        db: &DatabaseConnection,
+        name: String,
+    ) -> Result<Option<UserInfo>, sea_orm::DbErr> {
+        user::Entity::find()
+            .filter(user::Column::Name.eq(name)) // ✅ filter by name
+            .select_only()
+            .column(user::Column::Email)
+            .column(user::Column::Name)
+            .column(user::Column::CreatedAt)
+            .column(user::Column::UpdatedAt)
+            .column(user::Column::DeletedAt)
+            .into_model::<UserInfo>() // Your custom DTO
+            .one(db)
             .await
     }
 

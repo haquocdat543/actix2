@@ -13,6 +13,13 @@ impl UserService {
         UserRepository::get_users(db).await
     }
 
+    pub async fn get_user(
+        db: &DatabaseConnection,
+        name: String,
+    ) -> Result<Option<super::repository::UserInfo>, sea_orm::DbErr> {
+        UserRepository::get_user(db, name).await
+    }
+
     pub async fn login(
         db: &DatabaseConnection,
         name: String,
