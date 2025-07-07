@@ -37,3 +37,20 @@ pub struct LoginDTO {
     ))]
     pub password: String,
 }
+
+#[derive(Debug, Deserialize, Validate)]
+pub struct DeleteUserDTO {
+    #[validate(length(
+        min = 3,
+        max = 20,
+        message = "Name must be between 3 and 20 characters"
+    ))]
+    pub name: String,
+
+    #[validate(length(
+        min = 8,
+        max = 20,
+        message = "Name must be between 8 and 20 characters"
+    ))]
+    pub password: String,
+}

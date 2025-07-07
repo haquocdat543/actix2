@@ -34,6 +34,35 @@ impl UserService {
             None => Err(DbErr::RecordNotFound(format!("User '{}' not found", name))),
         }
     }
+
+    pub async fn delete_user(
+        db: &DatabaseConnection,
+        name: String,
+        password: String,
+    ) -> Result<bool, DbErr> {
+        let stored_password = UserRepository::get_password(db, name.clone()).await?;
+
+        match stored_password {
+            Some(hash) => {
+                match verify(&password, &hash.password) {
+                    Ok(true) => {
+                        // Step 3: If valid, delete user
+                        match UserRepository::delete_user(db, name).await {
+                            Ok(deleted) => Ok(deleted),
+                            Err(e) => Err(e),
+                        }
+                    }
+                    Ok(false) => Ok(false), // Password incorrect
+                    Err(e) => Err(DbErr::Custom(format!(
+                        "Password verification failed: {}",
+                        e
+                    ))),
+                }
+            }
+            None => Err(DbErr::RecordNotFound(format!("User '{}' not found", name))),
+        }
+    }
+
     pub async fn get_user_by_id(
         db: &DatabaseConnection,
         id: Uuid,

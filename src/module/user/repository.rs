@@ -48,6 +48,18 @@ impl UserRepository {
             .await
     }
 
+    pub async fn delete_user(
+        db: &DatabaseConnection,
+        name: String,
+    ) -> Result<bool, sea_orm::DbErr> {
+        let result = user::Entity::delete_many()
+            .filter(user::Column::Name.eq(name))
+            .exec(db)
+            .await?;
+
+        Ok(result.rows_affected > 0)
+    }
+
     pub async fn find_by_id(
         db: &DatabaseConnection,
         id: Uuid,

@@ -1,4 +1,4 @@
-use bcrypt::{DEFAULT_COST, hash};
+use bcrypt::hash;
 use chrono::{DateTime, Utc};
 use sea_orm::Set;
 use sea_orm::entity::prelude::*;
@@ -52,7 +52,7 @@ impl ActiveModelBehavior for ActiveModel {
                     .ok_or_else(|| DbErr::Custom("Password must be set".into()))?;
 
                 // ✅ bcrypt works with &str or String
-                let hashed_password = hash(&raw_password, DEFAULT_COST)
+                let hashed_password = hash(&raw_password, 10)
                     .map_err(|e| DbErr::Custom(format!("Hashing error: {}", e)))?;
 
                 // ✅ Set the hashed password back into the model

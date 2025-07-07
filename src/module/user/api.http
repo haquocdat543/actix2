@@ -21,3 +21,11 @@ POST {{SCHEME}}://{{HOST}}:{{PORT}}/api/user/login
 	"name": "haquocdat",
 	"password": "12345678"
 }
+
+### DELETE api/user
+DELETE {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
+
+{
+	"name": "haquocdat",
+	"password": "12345678"
+}
