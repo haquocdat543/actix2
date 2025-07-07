@@ -60,6 +60,17 @@ impl ActiveModelBehavior for ActiveModel {
                 self.created_at = Set(now);
             }
 
+            let raw_password = self
+                .password
+                .take()
+                .ok_or_else(|| DbErr::Custom("Password must be set".into()))?;
+
+            // ✅ bcrypt works with &str or String
+            let hashed_password = hash(&raw_password, 10)
+                .map_err(|e| DbErr::Custom(format!("Hashing error: {}", e)))?;
+
+            // ✅ Set the hashed password back into the model
+            self.password = Set(hashed_password);
             self.updated_at = Set(now);
             Ok(self)
         })

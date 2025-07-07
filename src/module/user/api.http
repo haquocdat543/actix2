@@ -29,3 +29,14 @@ DELETE {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
 	"name": "haquocdat",
 	"password": "12345678"
 }
+
+### PATCH api/user/login
+PATCH {{SCHEME}}://{{HOST}}:{{PORT}}/api/user/password
+
+{
+	"name": "haquocdat",
+	"password": "12345679",
+	"new_password": "12345678"
+}
+
+### DELETE api/user

@@ -1,5 +1,6 @@
 use super::entity::user;
 use chrono::{DateTime, Utc};
+use sea_orm::DbErr;
 use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
 use sea_orm::{FromQueryResult, QuerySelect};
 use serde::Serialize;
@@ -46,6 +47,31 @@ impl UserRepository {
             .into_model::<Password>()
             .one(db)
             .await
+    }
+
+    pub async fn update_password(
+        db: &DatabaseConnection,
+        name: String,
+        new_password: String,
+    ) -> Result<bool, DbErr> {
+        // 1. Find user by name
+        if let Some(user) = user::Entity::find()
+            .filter(user::Column::Name.eq(name))
+            .one(db)
+            .await?
+        {
+            // 3. Update fields
+            let mut active: user::ActiveModel = user.into();
+            active.password = Set(new_password);
+            active.updated_at = Set(Utc::now());
+
+            // 4. Commit update
+            active.update(db).await?;
+
+            Ok(true)
+        } else {
+            Ok(false) // user not found
+        }
     }
 
     pub async fn delete_user(

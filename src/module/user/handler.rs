@@ -7,7 +7,7 @@ pub fn user_scope() -> actix_web::Scope {
         .service(controller::create::create)
         .service(controller::login::login)
         .service(controller::delete::delete)
+        .service(controller::update_password::update_password)
         .service(controller::get_users::get_users)
-        .service(controller::get_user_by_id::get_user_by_id)
         .service(controller::delete::delete)
 }
