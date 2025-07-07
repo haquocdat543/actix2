@@ -5,13 +5,24 @@ use crate::module::user::{
     entity::user::{NewUser, User, Users},
     repository,
 };
-use bcrypt::{DEFAULT_COST, hash, verify};
+use argon2::password_hash::{PasswordHash, SaltString};
+use argon2::{Argon2, PasswordHasher, PasswordVerifier};
+use rand::rngs::OsRng; // ✅ proper import
+
 use uuid::Uuid;
 
 pub fn create_user(pool: &DbPool, dto: CreateUserDTO) -> Result<User, AppError> {
-    // Hash the password using bcrypt
-    let hashed_password =
-        hash(dto.password, DEFAULT_COST).map_err(|e| AppError::Internal(e.to_string()))?;
+    // Generate a random salt
+    let salt = SaltString::generate(&mut OsRng);
+
+    // Create an Argon2 hasher
+    let argon2 = Argon2::default();
+
+    // Hash the password with Argon2
+    let hashed_password = argon2
+        .hash_password(dto.password.as_bytes(), &salt)
+        .map_err(|e| AppError::Internal(e.to_string()))?
+        .to_string(); // Save the full hash string (with salt, parameters, etc.)
 
     let new_user = NewUser {
         id: Uuid::new_v4(),
@@ -28,15 +39,17 @@ pub fn get_users(pool: &DbPool) -> Result<Vec<Users>, AppError> {
 }
 
 pub fn login(pool: &DbPool, dto: LoginDTO) -> Result<bool, AppError> {
-    // 1. Get hashed password from the DB using the username
+    // 1. Get the hashed password from DB
     let hashed_password = repository::get_password(pool, dto.name.clone())?;
 
-    // 2. Compare the provided password with the hashed one using bcrypt
-    match verify(dto.password, &hashed_password) {
-        Ok(matching) => Ok(matching),
-        Err(e) => Err(AppError::Internal(format!(
-            "Password verification failed for user '{}': {}",
-            dto.name, e
-        ))),
-    }
+    // 2. Parse the Argon2 hash string
+    let parsed_hash = PasswordHash::new(&hashed_password)
+        .map_err(|e| AppError::Internal(format!("Hash parsing failed: {}", e)))?;
+
+    // 3. Verify the provided password
+    let verified = Argon2::default()
+        .verify_password(dto.password.as_bytes(), &parsed_hash)
+        .is_ok();
+
+    Ok(verified)
 }
