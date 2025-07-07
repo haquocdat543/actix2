@@ -1,7 +1,6 @@
-use super::entity::user;
+use super::{dto::PatchInfoDTO, entity::user};
 use crate::module::user::repository::UserRepository;
 use bcrypt::verify;
-use chrono::NaiveDate;
 use sea_orm::{DatabaseConnection, DbErr};
 
 pub struct UserService;
@@ -121,11 +120,9 @@ impl UserService {
     pub async fn update_info(
         db: &DatabaseConnection,
         name: String,
-        dob: Option<NaiveDate>,
-        role: Option<String>,
-        address: Option<String>,
+        dto: PatchInfoDTO,
     ) -> Result<bool, DbErr> {
-        match UserRepository::update_info(db, name, dob, role, address).await {
+        match UserRepository::update_info(db, name, dto).await {
             Ok(updated) => Ok(updated),
             Err(e) => Err(e),
         }

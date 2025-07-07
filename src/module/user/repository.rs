@@ -1,3 +1,4 @@
+use super::dto::PatchInfoDTO;
 use super::entity::user;
 use bcrypt::{DEFAULT_COST, hash};
 use chrono::{DateTime, NaiveDate, Utc};
@@ -169,9 +170,7 @@ impl UserRepository {
     pub async fn update_info(
         db: &DatabaseConnection,
         name: String,
-        dob: Option<NaiveDate>,
-        role: Option<String>,
-        address: Option<String>,
+        dto: PatchInfoDTO,
     ) -> Result<bool, DbErr> {
         // 1. Find user by name
         if let Some(user) = user::Entity::find()
@@ -181,9 +180,9 @@ impl UserRepository {
         {
             // 3. Update fields
             let mut active: user::ActiveModel = user.into();
-            active.dob = Set(dob);
-            active.role = Set(role);
-            active.address = Set(address);
+            active.dob = Set(dto.dob);
+            active.role = Set(dto.role);
+            active.address = Set(dto.address);
             active.updated_at = Set(Utc::now());
 
             // 4. Commit update

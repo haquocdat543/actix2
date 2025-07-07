@@ -20,8 +20,7 @@ pub async fn patch_info(
     };
 
     let body = body.into_inner();
-    match UserService::update_info(db.get_ref(), username, body.dob, body.role, body.address).await
-    {
+    match UserService::update_info(db.get_ref(), username, body).await {
         Ok(true) => HttpResponse::Ok().body("Info patched"),
         Ok(false) => HttpResponse::Ok().body("Patch failed"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
