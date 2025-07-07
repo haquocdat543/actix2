@@ -123,3 +123,28 @@ fn validate_dob(dob: &&NaiveDate) -> Result<(), validator::ValidationError> {
     }
     Ok(())
 }
+
+#[derive(Debug, Deserialize, Validate)]
+pub struct PutInfoDTO {
+    #[validate(required)]
+    #[serde(deserialize_with = "deserialize_naive_date")] // Custom deserializer
+    #[validate(custom(function = "validate_dob"))]
+    pub dob: Option<NaiveDate>,
+
+    #[validate(required)]
+    #[validate(length(
+        min = 3,
+        max = 20,
+        message = "Name must be between 3 and 20 characters"
+    ))]
+    pub role: Option<String>,
+
+    #[validate(required)]
+    #[validate(length(
+        min = 8,
+        max = 100,
+        message = "Password must be between 8 and 100 characters"
+    ))]
+    pub address: Option<String>,
+}
+
