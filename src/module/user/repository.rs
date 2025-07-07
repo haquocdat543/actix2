@@ -1,5 +1,4 @@
 use super::entity::user;
-use bcrypt::{DEFAULT_COST, hash};
 use chrono::{DateTime, Utc};
 use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
 use sea_orm::{FromQueryResult, QuerySelect};
@@ -72,14 +71,11 @@ impl UserRepository {
         email: String,
         password: String,
     ) -> Result<user::Model, sea_orm::DbErr> {
-        let hashed_password = hash(&password, DEFAULT_COST)
-            .map_err(|e| sea_orm::DbErr::Custom(format!("Hashing error: {}", e)))?;
-
         let user = user::ActiveModel {
             id: Set(Uuid::new_v4()),
             name: Set(name),
             email: Set(email),
-            password: Set(hashed_password),
+            password: Set(password),
             created_at: Default::default(), // Handled by `before_save`
             updated_at: Default::default(), // Handled by `before_save`
             deleted_at: Set(None),
