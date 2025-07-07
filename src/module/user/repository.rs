@@ -24,6 +24,13 @@ pub struct UserInfo {
     deleted_at: Option<DateTime<Utc>>,
 }
 
+#[derive(Debug, FromQueryResult, Serialize)]
+pub struct UpdatableInfo {
+    dob: Option<NaiveDate>,
+    role: Option<String>,
+    address: Option<String>,
+}
+
 pub struct UserRepository;
 
 impl UserRepository {
@@ -34,7 +41,7 @@ impl UserRepository {
                 name: Set("zhuyi".to_owned()),
                 email: Set("alice@gmail.com".to_owned()),
                 password: Set("securepass".to_owned()),
-                dob: Set(Some(NaiveDate::from_ymd_opt(2002, 9, 19).unwrap())),
+                dob: Set(Some(NaiveDate::from_ymd_opt(2002, 19, 9).unwrap())),
                 role: Set(Some("Skater".to_owned())),
                 address: Set(Some("China".to_owned())),
                 created_at: Set(Utc::now()),
@@ -46,7 +53,7 @@ impl UserRepository {
                 name: Set("hanni".to_owned()),
                 email: Set("hanni@gmail.com".to_owned()),
                 password: Set("securepass".to_owned()),
-                dob: Set(Some(NaiveDate::from_ymd_opt(2004, 6, 10).unwrap())),
+                dob: Set(Some(NaiveDate::from_ymd_opt(2004, 10, 6).unwrap())),
                 role: Set(Some("Singer".to_owned())),
                 address: Set(Some("South Korea".to_owned())),
                 created_at: Set(Utc::now()),
@@ -107,6 +114,9 @@ impl UserRepository {
             .select_only()
             .column(user::Column::Email)
             .column(user::Column::Name)
+            .column(user::Column::Dob)
+            .column(user::Column::Role)
+            .column(user::Column::Address)
             .column(user::Column::CreatedAt)
             .column(user::Column::UpdatedAt)
             .column(user::Column::DeletedAt)
@@ -145,6 +155,35 @@ impl UserRepository {
             // 3. Update fields
             let mut active: user::ActiveModel = user.into();
             active.password = Set(hashed_password);
+            active.updated_at = Set(Utc::now());
+
+            // 4. Commit update
+            active.update(db).await?;
+
+            Ok(true)
+        } else {
+            Ok(false) // user not found
+        }
+    }
+
+    pub async fn update_info(
+        db: &DatabaseConnection,
+        name: String,
+        dob: Option<NaiveDate>,
+        role: Option<String>,
+        address: Option<String>,
+    ) -> Result<bool, DbErr> {
+        // 1. Find user by name
+        if let Some(user) = user::Entity::find()
+            .filter(user::Column::Name.eq(name))
+            .one(db)
+            .await?
+        {
+            // 3. Update fields
+            let mut active: user::ActiveModel = user.into();
+            active.dob = Set(dob);
+            active.role = Set(role);
+            active.address = Set(address);
             active.updated_at = Set(Utc::now());
 
             // 4. Commit update

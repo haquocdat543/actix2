@@ -17,5 +17,11 @@ pub fn user_scope() -> actix_web::Scope {
                 .to(controller::get_user::get_user)
                 .wrap(JwtMiddleware),
         )
+        .route(
+            "",
+            web::patch()
+                .to(controller::patch_info::patch_info)
+                .wrap(JwtMiddleware),
+        )
         .service(controller::delete::delete)
 }

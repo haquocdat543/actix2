@@ -38,11 +38,22 @@ DELETE {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
 	"password": "12345678"
 }
 
-### PATCH api/user/login
+### PATCH api/user/password
 PATCH {{SCHEME}}://{{HOST}}:{{PORT}}/api/user/password
 
 {
 	"name": "haquocdat",
 	"password": "12345678",
 	"new_password": "12345679"
+}
+
+### PATCH api/user
+PATCH {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoYXF1b2NkYXQiLCJleHAiOjE3NTE5NTEyNDZ9.KC0e1Bw-zMakOI0Y5aaxkxaNaycRRP7lWd1-Us3CEcc
+
+{
+	"dob": "2004-10-26",
+	"role": "Manager",
+	"address": "United States"
 }

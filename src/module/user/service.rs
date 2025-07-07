@@ -1,6 +1,7 @@
 use super::entity::user;
 use crate::module::user::repository::UserRepository;
 use bcrypt::verify;
+use chrono::NaiveDate;
 use sea_orm::{DatabaseConnection, DbErr};
 
 pub struct UserService;
@@ -114,6 +115,19 @@ impl UserService {
                 }
             }
             None => Err(DbErr::RecordNotFound(format!("User '{}' not found", name))),
+        }
+    }
+
+    pub async fn update_info(
+        db: &DatabaseConnection,
+        name: String,
+        dob: Option<NaiveDate>,
+        role: Option<String>,
+        address: Option<String>,
+    ) -> Result<bool, DbErr> {
+        match UserRepository::update_info(db, name, dob, role, address).await {
+            Ok(updated) => Ok(updated),
+            Err(e) => Err(e),
         }
     }
 }
