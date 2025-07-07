@@ -1,5 +1,5 @@
 use bcrypt::hash;
-use chrono::{DateTime, Utc};
+use chrono::{NaiveDate, DateTime, Utc};
 use sea_orm::Set;
 use sea_orm::entity::prelude::*;
 use sea_orm::{ConnectionTrait, DbErr};
@@ -21,6 +21,11 @@ pub struct Model {
     pub email: String,
 
     pub password: String,
+
+    pub dob: Option<NaiveDate>, // 👈 Add this field
+
+    pub role: Option<String>,
+    pub address: Option<String>,
 
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,

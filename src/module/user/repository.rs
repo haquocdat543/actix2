@@ -1,6 +1,6 @@
 use super::entity::user;
 use bcrypt::{DEFAULT_COST, hash};
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, NaiveDate, Utc};
 use sea_orm::DbErr;
 use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
 use sea_orm::{FromQueryResult, QuerySelect};
@@ -24,6 +24,39 @@ pub struct UserInfo {
 pub struct UserRepository;
 
 impl UserRepository {
+    pub async fn seed(db: &sea_orm::DatabaseConnection) -> Result<(), sea_orm::DbErr> {
+        let users = vec![
+            user::ActiveModel {
+                id: Set(Uuid::new_v4()),
+                name: Set("zhuyi".to_owned()),
+                email: Set("alice@gmail.com".to_owned()),
+                password: Set("securepass".to_owned()),
+                dob: Set(Some(NaiveDate::from_ymd_opt(2002, 19, 9).unwrap())),
+                role: Set(Some("Skater".to_owned())),
+                address: Set(Some("China".to_owned())),
+                created_at: Set(Utc::now()),
+                updated_at: Set(Utc::now()),
+                deleted_at: Set(None),
+            },
+            user::ActiveModel {
+                id: Set(Uuid::new_v4()),
+                name: Set("hanni".to_owned()),
+                email: Set("hanni@gmail.com".to_owned()),
+                password: Set("securepass".to_owned()),
+                dob: Set(Some(NaiveDate::from_ymd_opt(2004, 26, 10).unwrap())),
+                role: Set(Some("Singer".to_owned())),
+                address: Set(Some("South Korea".to_owned())),
+                created_at: Set(Utc::now()),
+                updated_at: Set(Utc::now()),
+                deleted_at: Set(None),
+            },
+        ];
+
+        for user in users {
+            let _ = user.insert(db).await?;
+        }
+        Ok(())
+    }
 
     pub async fn create(
         db: &DatabaseConnection,
@@ -35,6 +68,9 @@ impl UserRepository {
             id: Set(Uuid::new_v4()),
             name: Set(name),
             email: Set(email),
+            dob: Set(None),
+            role: Set(None),
+            address: Set(None),
             password: Set(password),
             created_at: Default::default(), // Handled by `before_save`
             updated_at: Default::default(), // Handled by `before_save`
@@ -125,5 +161,4 @@ impl UserRepository {
 
         Ok(result.rows_affected > 0)
     }
-
 }
