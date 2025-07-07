@@ -16,6 +16,9 @@ pub struct Password {
 pub struct UserInfo {
     email: String,
     name: String,
+    dob: Option<NaiveDate>,
+    role: Option<String>,
+    address: Option<String>,
     created_at: DateTime<Utc>,
     updated_at: DateTime<Utc>,
     deleted_at: Option<DateTime<Utc>>,
@@ -31,7 +34,7 @@ impl UserRepository {
                 name: Set("zhuyi".to_owned()),
                 email: Set("alice@gmail.com".to_owned()),
                 password: Set("securepass".to_owned()),
-                dob: Set(Some(NaiveDate::from_ymd_opt(2002, 19, 9).unwrap())),
+                dob: Set(Some(NaiveDate::from_ymd_opt(2002, 9, 19).unwrap())),
                 role: Set(Some("Skater".to_owned())),
                 address: Set(Some("China".to_owned())),
                 created_at: Set(Utc::now()),
@@ -43,7 +46,7 @@ impl UserRepository {
                 name: Set("hanni".to_owned()),
                 email: Set("hanni@gmail.com".to_owned()),
                 password: Set("securepass".to_owned()),
-                dob: Set(Some(NaiveDate::from_ymd_opt(2004, 26, 10).unwrap())),
+                dob: Set(Some(NaiveDate::from_ymd_opt(2004, 6, 10).unwrap())),
                 role: Set(Some("Singer".to_owned())),
                 address: Set(Some("South Korea".to_owned())),
                 created_at: Set(Utc::now()),
@@ -84,6 +87,9 @@ impl UserRepository {
             .select_only()
             .column(user::Column::Email)
             .column(user::Column::Name)
+            .column(user::Column::Dob)
+            .column(user::Column::Role)
+            .column(user::Column::Address)
             .column(user::Column::CreatedAt)
             .column(user::Column::UpdatedAt)
             .column(user::Column::DeletedAt)

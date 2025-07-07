@@ -1,4 +1,5 @@
 pub mod create;
+pub mod seed;
 pub mod delete;
 pub mod get_user;
 pub mod get_users;

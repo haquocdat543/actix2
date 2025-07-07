@@ -5,6 +5,9 @@
 ### GET api/user/all
 GET {{SCHEME}}://{{HOST}}:{{PORT}}/api/user/all
 
+### POST api/user/seed
+POST {{SCHEME}}://{{HOST}}:{{PORT}}/api/user/seed
+
 ### GET api/user
 GET {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
 Content-Type: application/json

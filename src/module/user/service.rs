@@ -6,6 +6,9 @@ use sea_orm::{DatabaseConnection, DbErr};
 pub struct UserService;
 
 impl UserService {
+    pub async fn seed(db: &DatabaseConnection) -> Result<(), sea_orm::DbErr> {
+        UserRepository::seed(db).await
+    }
 
     pub async fn create(
         db: &DatabaseConnection,
@@ -113,5 +116,4 @@ impl UserService {
             None => Err(DbErr::RecordNotFound(format!("User '{}' not found", name))),
         }
     }
-
 }
