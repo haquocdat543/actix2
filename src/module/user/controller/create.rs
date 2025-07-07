@@ -1,6 +1,6 @@
 use crate::module::user::dto::CreateUserDTO;
-use crate::module::user::service::create_user;
-use actix_web::{HttpResponse, Responder, post, web};
+use crate::module::user::service;
+use actix_web::{ResponseError, HttpResponse, Responder, post, web};
 use validator::Validate;
 
 use crate::config::common::DbPool;
@@ -11,6 +11,8 @@ async fn create(pool: web::Data<DbPool>, body: web::Json<CreateUserDTO>) -> impl
         return HttpResponse::BadRequest().json(errors);
     }
 
-    let user = create_user(&pool, body.into_inner());
-    HttpResponse::Ok().json(user)
+    match service::create_user(&pool, body.into_inner()) {
+        Ok(user) => HttpResponse::Created().json(user),
+        Err(err) => err.error_response(), // ✅ Don't end match block with `;`
+    }
 }

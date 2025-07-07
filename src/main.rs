@@ -4,12 +4,13 @@ mod schema;
 
 mod module {
     pub mod user {
-        pub mod handler;
-        pub mod dto;
-        pub mod service;
         pub mod controller; // if `create.rs` is here
+        pub mod dto;
         pub mod entity;
+        pub mod error;
+        pub mod handler;
         pub mod repository;
+        pub mod service;
     }
 }
 
@@ -17,8 +18,8 @@ mod router {
     pub mod router;
 }
 
-use actix_web::{App, HttpServer, web};
 use actix_web::middleware::Logger;
+use actix_web::{App, HttpServer, web};
 use dotenvy;
 use env_logger::Env;
 use std::env;
@@ -46,4 +47,3 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
-

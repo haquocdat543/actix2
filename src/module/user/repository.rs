@@ -2,17 +2,20 @@ use diesel::prelude::*;
 
 use crate::config::common::DbPool;
 use crate::module::user::entity::user::{NewUser, User, Users};
+use crate::module::user::error::AppError;
 use crate::schema::user;
 
-pub fn create_user(pool: &DbPool, new_user: NewUser) -> QueryResult<User> {
-    let mut conn = pool.get().expect("Failed to get DB connection");
+pub fn create_user(pool: &DbPool, new_user: NewUser) -> Result<User, AppError> {
+    let mut conn = pool.get().map_err(|e| AppError::Internal(e.to_string()))?;
+
     diesel::insert_into(user::table)
         .values(&new_user)
         .get_result(&mut conn)
+        .map_err(AppError::from)
 }
 
-pub fn get_users(pool: &DbPool) -> QueryResult<Vec<Users>> {
-    let mut conn = pool.get().expect("Failed to get DB connection");
+pub fn get_users(pool: &DbPool) -> Result<Vec<Users>, AppError> {
+    let mut conn = pool.get().map_err(|e| AppError::Internal(e.to_string()))?;
 
     user::table
         .select((
@@ -23,4 +26,5 @@ pub fn get_users(pool: &DbPool) -> QueryResult<Vec<Users>> {
             user::deleted_at,
         )) // ✅ SELECT fields
         .load::<Users>(&mut conn)
+        .map_err(AppError::from)
 }
