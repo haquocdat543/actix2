@@ -26,3 +26,12 @@ pub struct NewUser {
     pub password: String,
 }
 
+#[derive(Debug, Queryable, Serialize)]
+#[diesel(table_name = user)]
+pub struct Users {
+    pub email: String,
+    pub dob: Option<NaiveDate>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub deleted_at: Option<DateTime<Utc>>,
+}
