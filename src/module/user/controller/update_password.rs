@@ -15,7 +15,8 @@ pub async fn update_password(
     let req = req.into_inner();
     match UserService::update_password(db.get_ref(), req.name, req.password, req.new_password).await
     {
-        Ok(_) => HttpResponse::Ok().body("Password updated"),
+        Ok(true) => HttpResponse::Ok().body("Password updated"),
+        Ok(false) => HttpResponse::Ok().body("Password incorrect"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

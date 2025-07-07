@@ -1,3 +1,4 @@
+use bcrypt::{hash, DEFAULT_COST};
 use super::entity::user;
 use chrono::{DateTime, Utc};
 use sea_orm::DbErr;
@@ -60,9 +61,12 @@ impl UserRepository {
             .one(db)
             .await?
         {
+            let hashed_password = hash(&new_password, DEFAULT_COST)
+                .map_err(|e| sea_orm::DbErr::Custom(format!("Hasing error {}", e)))?;
+
             // 3. Update fields
             let mut active: user::ActiveModel = user.into();
-            active.password = Set(new_password);
+            active.password = Set(hashed_password);
             active.updated_at = Set(Utc::now());
 
             // 4. Commit update

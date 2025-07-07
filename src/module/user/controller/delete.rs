@@ -14,7 +14,8 @@ pub async fn delete(
 
     let req = req.into_inner();
     match UserService::delete_user(db.get_ref(), req.name, req.password).await {
-        Ok(_) => HttpResponse::Ok().body("User deleted"),
+        Ok(true) => HttpResponse::Ok().body("User deleted"),
+        Ok(false) => HttpResponse::Ok().body("Password incorrect"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }
