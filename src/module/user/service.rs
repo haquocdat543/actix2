@@ -1,3 +1,4 @@
+use uuid::Uuid;
 use crate::config::common::DbPool;
 use crate::module::user::{
     dto::CreateUserDTO,
@@ -7,6 +8,7 @@ use crate::module::user::{
 
 pub fn create_user(pool: &DbPool, dto: CreateUserDTO) -> User {
     let new_user = NewUser {
+        id: Uuid::new_v4(),
         name: dto.name,
         email: dto.email,
         password: dto.password,
