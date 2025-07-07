@@ -1,6 +1,21 @@
 use chrono::NaiveDate;
 use serde::Deserialize;
-use validator::Validate;
+use validator::{Validate, ValidationError};
+
+#[allow(dead_code)]
+fn validate_password_strength(password: &str) -> Result<(), ValidationError> {
+    if !password.chars().any(|c| c.is_ascii_digit()) {
+        return Err(ValidationError::new(
+            "Password must contain at least one number",
+        ));
+    }
+    if !password.chars().any(|c| c.is_ascii_uppercase()) {
+        return Err(ValidationError::new(
+            "Password must contain at least one uppercase letter",
+        ));
+    }
+    Ok(())
+}
 
 #[derive(Debug, Deserialize, Validate)]
 pub struct CreateUserDTO {
@@ -119,7 +134,9 @@ where
 fn validate_dob(dob: &&NaiveDate) -> Result<(), validator::ValidationError> {
     let today = chrono::Utc::now().naive_utc().date();
     if **dob > today {
-        return Err(validator::ValidationError::new("Date of birth must be in the past"));
+        return Err(validator::ValidationError::new(
+            "Date of birth must be in the past",
+        ));
     }
     Ok(())
 }
@@ -147,4 +164,3 @@ pub struct PutInfoDTO {
     ))]
     pub address: Option<String>,
 }
-
