@@ -28,3 +28,13 @@ pub fn get_users(pool: &DbPool) -> Result<Vec<Users>, AppError> {
         .load::<Users>(&mut conn)
         .map_err(AppError::from)
 }
+
+pub fn get_password(pool: &DbPool, name: String) -> Result<String, AppError> {
+    let mut conn = pool.get().map_err(|e| AppError::Internal(e.to_string()))?;
+
+    user::table
+        .filter(user::name.eq(name))
+        .select(user::password) // ✅ SELECT fields
+        .first::<String>(&mut conn)
+        .map_err(AppError::from)
+}
