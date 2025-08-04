@@ -19,79 +19,43 @@ fn validate_password_strength(password: &str) -> Result<(), ValidationError> {
 
 #[derive(Debug, Deserialize, Validate)]
 pub struct CreateUserDTO {
-    #[validate(length(
-        min = 3,
-        max = 20,
-        message = "Name must be between 3 and 20 characters"
-    ))]
+    #[validate(length( min = 3, max = 20, message = "Name must be between 3 and 20 characters"))]
     pub name: String,
 
     #[validate(email(message = "Email must be a valid email address"))]
     pub email: String,
 
-    #[validate(length(
-        min = 8,
-        max = 20,
-        message = "Name must be between 8 and 20 characters"
-    ))]
+    #[validate(length( min = 8, max = 20, message = "Name must be between 8 and 20 characters"))]
     pub password: String,
 }
 
 #[derive(Debug, Deserialize, Validate)]
 pub struct LoginDTO {
-    #[validate(length(
-        min = 3,
-        max = 20,
-        message = "Name must be between 3 and 20 characters"
-    ))]
+    #[validate(length( min = 3, max = 20, message = "Name must be between 3 and 20 characters"))]
     pub name: String,
 
-    #[validate(length(
-        min = 8,
-        max = 20,
-        message = "Name must be between 8 and 20 characters"
-    ))]
+    #[validate(length( min = 8, max = 20, message = "Name must be between 8 and 20 characters"))]
     pub password: String,
 }
 
 #[derive(Debug, Deserialize, Validate)]
 pub struct DeleteUserDTO {
-    #[validate(length(
-        min = 3,
-        max = 20,
-        message = "Name must be between 3 and 20 characters"
-    ))]
+    #[validate(length( min = 3, max = 20, message = "Name must be between 3 and 20 characters"))]
     pub name: String,
 
-    #[validate(length(
-        min = 8,
-        max = 20,
-        message = "Password must be between 8 and 20 characters"
-    ))]
+    #[validate(length( min = 8, max = 20, message = "Password must be between 8 and 20 characters"))]
     pub password: String,
 }
 
 #[derive(Debug, Deserialize, Validate)]
 pub struct UpdatePasswordDTO {
-    #[validate(length(
-        min = 3,
-        max = 20,
-        message = "Name must be between 3 and 20 characters"
-    ))]
+    #[validate(length( min = 3, max = 20, message = "Name must be between 3 and 20 characters"))]
     pub name: String,
 
-    #[validate(length(
-        min = 8,
-        max = 20,
-        message = "Password must be between 8 and 20 characters"
-    ))]
+    #[validate(length( min = 8, max = 20, message = "Password must be between 8 and 20 characters"))]
     pub password: String,
 
-    #[validate(length(
-        min = 8,
-        max = 20,
-        message = "New password must be between 8 and 20 characters"
-    ))]
+    #[validate(length( min = 8, max = 20, message = "New password must be between 8 and 20 characters"))]
     pub new_password: String,
 }
 
@@ -101,18 +65,10 @@ pub struct PatchInfoDTO {
     #[validate(custom(function = "validate_dob"))]
     pub dob: Option<NaiveDate>,
 
-    #[validate(length(
-        min = 3,
-        max = 20,
-        message = "Name must be between 3 and 20 characters"
-    ))]
+    #[validate(length( min = 3, max = 20, message = "Name must be between 3 and 20 characters"))]
     pub role: Option<String>,
 
-    #[validate(length(
-        min = 8,
-        max = 100,
-        message = "Password must be between 8 and 100 characters"
-    ))]
+    #[validate(length( min = 8, max = 100, message = "Password must be between 8 and 100 characters"))]
     pub address: Option<String>,
 }
 
@@ -149,19 +105,11 @@ pub struct PutInfoDTO {
     pub dob: Option<NaiveDate>,
 
     #[validate(required)]
-    #[validate(length(
-        min = 3,
-        max = 20,
-        message = "Name must be between 3 and 20 characters"
-    ))]
+    #[validate(length( min = 3, max = 20, message = "Name must be between 3 and 20 characters"))]
     pub role: Option<String>,
 
     #[validate(required)]
-    #[validate(length(
-        min = 8,
-        max = 100,
-        message = "Password must be between 8 and 100 characters"
-    ))]
+    #[validate(length( min = 8, max = 100, message = "Password must be between 8 and 100 characters"))]
     pub address: Option<String>,
 }
 
