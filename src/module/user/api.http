@@ -1,6 +1,7 @@
 @SCHEME = http
 @HOST = localhost
 @PORT = 8090
+@TOKEN = Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoYXF1b2NkYXQiLCJleHAiOjE3NTE5NTEyNDZ9.KC0e1Bw-zMakOI0Y5aaxkxaNaycRRP7lWd1-Us3CEcc
 
 ### GET api/user/all
 GET {{SCHEME}}://{{HOST}}:{{PORT}}/api/user/all
@@ -11,7 +12,7 @@ POST {{SCHEME}}://{{HOST}}:{{PORT}}/api/user/seed
 ### GET api/user
 GET {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoYXF1b2NkYXQiLCJleHAiOjE3NTE5NTEyNDZ9.KC0e1Bw-zMakOI0Y5aaxkxaNaycRRP7lWd1-Us3CEcc
+Authorization: {{TOKEN}}
 
 ### POST api/user
 POST {{SCHEME}}://{{HOST}}:{{PORT}}/api/user
