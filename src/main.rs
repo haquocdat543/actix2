@@ -1,31 +1,38 @@
-use actix::router::router;
 use actix_web::middleware::Logger;
 use actix_web::web::Data;
 use actix_web::{App, HttpServer};
+
+use actix::config::env::Config;
+use actix::router::router;
+
+use sea_orm::{Database, DatabaseConnection};
+
 use env_logger::Env;
-use sea_orm::Database;
-use std::env;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenvy::dotenv().ok();
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    // Logger initialize
+    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
-    let db = Database::connect(&database_url)
+    // Centralized config
+    let config = Config::from_env();
+
+    // Initialize DB
+    let db: DatabaseConnection = Database::connect(&config.database_url)
         .await
         .expect("Failed to connect to DB");
 
-    let db_data = Data::new(db); // ✅ Wrap it here
-
-    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+    let db_data = Data::new(db);
+    let config_data = Data::new(config.clone());
 
     HttpServer::new(move || {
         App::new()
-            .wrap(Logger::default()) // ✅ this is from actix_web::middleware
-            .app_data(db_data.clone()) // ✅ Share it with app
-            .service(router::api_scope(db_data.clone())) // Mount /api
+            .wrap(Logger::default())
+            .app_data(db_data.clone())
+            .app_data(config_data.clone())
+            .service(router::api_scope(db_data.clone()))
     })
-    .bind("127.0.0.1:8090")?
+    .bind(format!("{}:{}", config.host, config.port))?
     .run()
     .await
 }
