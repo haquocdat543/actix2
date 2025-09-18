@@ -1,0 +1,11 @@
+# Docker
+**/Dockerfile
+**/.dockerignore
+**/compose.yaml
+
+# Environment
+**/.env
+**/.env.*
+
+# Rust
+**/target
