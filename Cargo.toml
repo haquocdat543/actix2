@@ -26,5 +26,5 @@ name = "migration-bin"  # <-- renamed to avoid conflict
 path = "migration/main.rs"
 
 [[bin]]
-name = "main"
+name = "app"
 path = "src/main.rs"

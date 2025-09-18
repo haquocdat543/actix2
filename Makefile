@@ -9,7 +9,7 @@ w-c:
 w-b:
 	cargo watch -x build
 w-r:
-	cargo watch -x 'run --bin main'
+	cargo watch -x 'run --bin app'
 
 mi:
 	sea-orm-cli init
