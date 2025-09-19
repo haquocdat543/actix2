@@ -1,7 +1,3 @@
-DATABASE_URL=postgres://develop:effimatebackend@localhost:5433/postgres
-
-export DATABASE_URL
-
 i-cw:
 	cargo install cargo-watch
 w-c:
@@ -10,6 +6,14 @@ w-b:
 	cargo watch -x build
 w-r:
 	cargo watch -x 'run --bin app'
+
+
+####################################################################################################
+# DATABASE
+####################################################################################################
+
+database-env:
+	export $$(cat .env | grep DATABASE_URL)
 
 mi:
 	sea-orm-cli init
@@ -20,8 +24,8 @@ mg:
 mge:
 	sea-orm-cli generate entity -o src/module/user/entity
 
-mup:
+mup: database-env
 	sea-orm-cli migrate up
 
-mdown:
+mdown: database-env
 	sea-orm-cli migrate down
