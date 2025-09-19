@@ -1,10 +1,13 @@
+use crate::config::env::Config;
 use chrono::{Duration, Utc};
 use jsonwebtoken::{
-    Algorithm, DecodingKey, EncodingKey, Header, TokenData, Validation, encode, decode, errors::Result,
+    Algorithm, DecodingKey, EncodingKey, Header, TokenData, Validation, decode, encode,
+    errors::Result,
 };
+use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 
-const SECRET: &[u8] = b"your-secret-key"; // use env variable in real apps
+static SECRET: Lazy<Vec<u8>> = Lazy::new(|| Config::from_env().jwt.into_bytes());
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
@@ -16,7 +19,7 @@ pub struct Claims {
 pub fn verify_token(token: &str) -> Result<TokenData<Claims>> {
     decode::<Claims>(
         token,
-        &DecodingKey::from_secret(SECRET),
+        &DecodingKey::from_secret(&SECRET),
         &Validation::new(Algorithm::HS256),
     )
 }
@@ -35,6 +38,6 @@ pub fn generate_token(username: &str) -> Result<String> {
     encode(
         &Header::default(),
         &claims,
-        &EncodingKey::from_secret(SECRET),
+        &EncodingKey::from_secret(&SECRET),
     )
 }

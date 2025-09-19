@@ -15,6 +15,7 @@ dependencies = [
  "futures",
  "jsonwebtoken",
  "log",
+ "once_cell",
  "openssl",
  "sea-orm",
  "sea-orm-migration",
