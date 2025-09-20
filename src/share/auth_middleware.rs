@@ -52,21 +52,20 @@ where
         let service = Rc::clone(&self.service);
 
         Box::pin(async move {
-            if let Some(auth_header) = req.headers().get("Authorization") {
-                if let Ok(auth_str) = auth_header.to_str() {
-                    if auth_str.starts_with("Bearer ") {
-                        let token = auth_str.trim_start_matches("Bearer ").trim();
+            if let Some(auth_header) = req.headers().get("Authorization")
+                && let Ok(auth_str) = auth_header.to_str()
+                && auth_str.starts_with("Bearer ")
+            {
+                let token = auth_str.trim_start_matches("Bearer ").trim();
 
-                        match verify_token(token) {
-                            Ok(token_data) => {
-                                // Optionally store claims in request extensions
-                                req.extensions_mut().insert(token_data.claims);
-                                return service.call(req).await;
-                            }
-                            Err(_) => {
-                                return Err(actix_web::error::ErrorUnauthorized("Invalid token"));
-                            }
-                        }
+                match verify_token(token) {
+                    Ok(token_data) => {
+                        // Optionally store claims in request extensions
+                        req.extensions_mut().insert(token_data.claims);
+                        return service.call(req).await;
+                    }
+                    Err(_) => {
+                        return Err(actix_web::error::ErrorUnauthorized("Invalid token"));
                     }
                 }
             }
