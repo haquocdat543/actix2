@@ -32,7 +32,11 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
-                    .col(ColumnDef::new(User::DeletedAt).timestamp_with_time_zone().null())
+                    .col(
+                        ColumnDef::new(User::DeletedAt)
+                            .timestamp_with_time_zone()
+                            .null(),
+                    )
                     .to_owned(),
             )
             .await

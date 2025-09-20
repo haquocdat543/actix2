@@ -1,5 +1,5 @@
 use bcrypt::hash;
-use chrono::{NaiveDate, DateTime, Utc};
+use chrono::{DateTime, NaiveDate, Utc};
 use sea_orm::Set;
 use sea_orm::entity::prelude::*;
 use sea_orm::{ConnectionTrait, DbErr};

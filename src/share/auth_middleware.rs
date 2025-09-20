@@ -1,5 +1,8 @@
 use actix_web::{
-    dev::{Service, ServiceRequest, ServiceResponse, Transform}, error::InternalError, http::StatusCode, Error, HttpMessage
+    Error, HttpMessage,
+    dev::{Service, ServiceRequest, ServiceResponse, Transform},
+    error::InternalError,
+    http::StatusCode,
 };
 use futures::future::{LocalBoxFuture, Ready, ok};
 use serde_json::json;
