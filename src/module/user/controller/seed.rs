@@ -16,7 +16,7 @@ pub async fn seed(db: web::Data<DatabaseConnection>) -> impl Responder {
                 message: "Seeded".to_string(),
             };
             HttpResponse::Created().json(seeding_status)
-        },
+        }
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }

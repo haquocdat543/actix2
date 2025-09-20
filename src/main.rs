@@ -3,7 +3,7 @@ use actix_web::web::Data;
 use actix_web::{App, HttpServer};
 
 use actix::config::env::CONFIG;
-use actix::router::router;
+use actix::router::api;
 
 use sea_orm::{Database, DatabaseConnection};
 
@@ -30,7 +30,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .app_data(db_data.clone())
             .app_data(config_data.clone())
-            .service(router::api_scope(db_data.clone()))
+            .service(api::api_scope(db_data.clone()))
     })
     .bind(format!("{}:{}", config.host, config.port))?
     .run()

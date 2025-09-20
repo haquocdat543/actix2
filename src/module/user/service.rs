@@ -1,7 +1,4 @@
-use super::{
-    dto::InfoDTO,
-    entity::user,
-};
+use super::{dto::InfoDTO, entity::user};
 use crate::module::user::repository::UserRepository;
 use bcrypt::verify;
 use sea_orm::{DatabaseConnection, DbErr};
