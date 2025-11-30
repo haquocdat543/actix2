@@ -2,8 +2,9 @@
 FROM rust:1.89 AS builder
 
 ENV RUSTC_WRAPPER=""
+ENV TARGET="aarch64-unknown-linux-musl"
 
-RUN rustup target add aarch64-unknown-linux-musl
+RUN rustup target add ${TARGET}
 
 WORKDIR /usr/src/app
 
@@ -17,10 +18,12 @@ COPY . .
 
 RUN cargo build --bin app \
 	--release \
-	--target aarch64-unknown-linux-musl
+	--target ${TARGET}
 
 FROM alpine:latest
 
-COPY --from=builder /usr/src/app/target/aarch64-unknown-linux-musl/release/app /usr/local/bin/app
+ENV TARGET="aarch64-unknown-linux-musl"
+
+COPY --from=builder /usr/src/app/target/${TARGET}/release/app /usr/local/bin/app
 
 CMD ["app"]
