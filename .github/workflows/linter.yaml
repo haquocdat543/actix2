@@ -4,6 +4,10 @@ on:
   pull_request:
   push:
 
+env:
+  TOOLCHAIN_VERSION: 1.89.0
+  COMPONENTS: rustfmt, clippy
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -14,7 +18,8 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          components: rustfmt, clippy
+          toolchain: ${{ env.TOOLCHAIN_VERSION }}
+          components: ${{ env.COMPONENTS }}
 
       - name: Run rustfmt
         run: cargo fmt --all -- --check
