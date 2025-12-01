@@ -1,0 +1,66 @@
+name: Check
+
+on:
+  pull_request:
+  push:
+
+env:
+  TOOLCHAIN_VERSION: 1.89.0
+  COMPONENTS: rustfmt, clippy
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.TOOLCHAIN_VERSION }}
+          components: ${{ env.COMPONENTS }}
+
+      - name: Install Binstall
+        run: |
+          cargo install cargo-binstall --locked
+
+      - name: Install tools
+        run: |
+          cargo binstall sccache --locked
+          cargo binstall cargo-expand
+          cargo binstall cargo-watch
+          cargo binstall cargo-edit
+          cargo binstall cargo-nextest
+          cargo binstall cargo-llvm-lines
+          cargo binstall cargo-bloat
+          cargo binstall cargo-outdated
+          cargo binstall cargo-update
+          cargo binstall cargo-deny
+          cargo binstall cargo-geiger
+          cargo binstall cargo-tarpaulin
+          cargo binstall cargo-chef
+          cargo binstall flamegraph
+          cargo binstall cargo-udeps
+          cargo binstall cargo-zigbuild
+          cargo binstall just
+          cargo binstall cargo-make
+          cargo binstall cargo-px
+          cargo binstall cargo-dist
+
+      - name: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/sccache
+            ~/.cargo/bin
+            ~/.cargo/binstall
+            ~/.cargo/git
+            ~/.cargo/registry
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}-${{ github.run_id }}
+          restore-keys: |
+            rust-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}-
+
+      - name: sccache statistics
+        if: always()
+        run: sccache --show-stats || true
