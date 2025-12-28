@@ -20,10 +20,10 @@ RUN cargo build --bin app \
 	--release \
 	--target ${TARGET}
 
-FROM alpine:latest
+FROM scratch
 
 ENV TARGET="aarch64-unknown-linux-musl"
 
-COPY --from=builder /usr/src/app/target/${TARGET}/release/app /usr/local/bin/app
+COPY --from=builder /usr/src/app/target/${TARGET}/release/app /
 
-CMD ["app"]
+CMD ["/app"]
