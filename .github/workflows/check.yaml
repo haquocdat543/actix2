@@ -24,7 +24,25 @@ jobs:
       - name: Binstall
         uses: taiki-e/install-action@v2
         with:
-          tool: cargo-expand,cargo-watch,cargo-edit,cargo-nextest,cargo-llvm-lines,cargo-bloat,cargo-outdated,cargo-update,cargo-deny,cargo-geiger,cargo-tarpaulin,flamegraph,cargo-udeps,cargo-zigbuild,just,cargo-make,cargo-px,cargo-dist
+          tool: >
+            cargo-expand
+            cargo-watch
+            cargo-edit
+            cargo-nextest
+            cargo-llvm-lines
+            cargo-bloat
+            cargo-outdated
+            cargo-update
+            cargo-deny
+            cargo-geiger
+            cargo-tarpaulin
+            flamegraph
+            cargo-udeps
+            cargo-zigbuild
+            just
+            cargo-make
+            cargo-px
+            cargo-dist
 
       - name: cache
         uses: actions/cache@v4
