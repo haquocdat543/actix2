@@ -21,32 +21,10 @@ jobs:
           toolchain: ${{ env.TOOLCHAIN_VERSION }}
           components: ${{ env.COMPONENTS }}
 
-      - name: Install Binstall
-        run: |
-          cargo install cargo-binstall --locked
-
-      - name: Install tools
-        run: |
-          cargo binstall sccache --locked
-          cargo binstall cargo-expand
-          cargo binstall cargo-watch
-          cargo binstall cargo-edit
-          cargo binstall cargo-nextest
-          cargo binstall cargo-llvm-lines
-          cargo binstall cargo-bloat
-          cargo binstall cargo-outdated
-          cargo binstall cargo-update
-          cargo binstall cargo-deny
-          cargo binstall cargo-geiger
-          cargo binstall cargo-tarpaulin
-          cargo binstall cargo-chef
-          cargo binstall flamegraph
-          cargo binstall cargo-udeps
-          cargo binstall cargo-zigbuild
-          cargo binstall just
-          cargo binstall cargo-make
-          cargo binstall cargo-px
-          cargo binstall cargo-dist
+      - name: Binstall
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-expand,cargo-watch,cargo-edit,cargo-nextest,cargo-llvm-lines,cargo-bloat,cargo-outdated,cargo-update,cargo-deny,cargo-geiger,cargo-tarpaulin,flamegraph,cargo-udeps,cargo-zigbuild,just,cargo-make,cargo-px,cargo-dist
 
       - name: cache
         uses: actions/cache@v4
