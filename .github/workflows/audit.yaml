@@ -14,6 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/sccache
+            ~/.cargo/bin
+            ~/.cargo/binstall
+            ~/.cargo/git
+            ~/.cargo/registry
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}-${{ github.run_id }}
+          restore-keys: |
+            rust-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}-
       - uses: rustsec/audit-check@v1.4.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
