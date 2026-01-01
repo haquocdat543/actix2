@@ -9,3 +9,10 @@
 
 # Rust
 **/target
+
+# Git
+**/.github
+**/.gitignore
+
+# Build
+**/Makefile
