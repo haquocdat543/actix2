@@ -1,29 +1,35 @@
-# Step 1: Build stage
+# syntax=docker/dockerfile:1.6
+
 FROM rust:1.89 AS builder
 
+ENV CARGO_BUILD_JOBS=8
 ENV RUSTC_WRAPPER=""
-ENV TARGET="aarch64-unknown-linux-musl"
 
-RUN rustup target add ${TARGET}
+RUN rustup target add aarch64-unknown-linux-musl
 
-WORKDIR /usr/src/app
+RUN apt-get update -y && apt-get install -y \
+	musl-tools \
+	libssl-dev
 
-RUN apt-get update -y \
-	&& apt-get install -y \
-	musl-tools
+WORKDIR /app
 
 COPY Cargo.toml Cargo.lock ./
 
-COPY . .
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+	--mount=type=cache,target=/usr/local/cargo/git \
+	cargo fetch
 
-RUN cargo build --bin app \
+COPY src ./src
+
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+	--mount=type=cache,target=/usr/local/cargo/git \
+	cargo build \
+	--bin app \
 	--release \
-	--target ${TARGET}
+	--target aarch64-unknown-linux-musl
 
 FROM scratch
 
-ENV TARGET="aarch64-unknown-linux-musl"
-
-COPY --from=builder /usr/src/app/target/${TARGET}/release/app /
+COPY --from=builder /app/target/aarch64-unknown-linux-musl/release/app /app
 
 CMD ["/app"]
