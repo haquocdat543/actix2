@@ -1,4 +1,4 @@
-use crate::config::env::CONFIG;
+use crate::config::env::get_env_jwt;
 use chrono::{Duration, Utc};
 use jsonwebtoken::{
     Algorithm, DecodingKey, EncodingKey, Header, TokenData, Validation, decode, encode,
@@ -16,7 +16,7 @@ pub struct Claims {
 pub fn verify_token(token: &str) -> Result<TokenData<Claims>> {
     decode::<Claims>(
         token,
-        &DecodingKey::from_secret(&CONFIG.jwt.clone().into_bytes()),
+        &DecodingKey::from_secret(&get_env_jwt().into_bytes()),
         &Validation::new(Algorithm::HS256),
     )
 }
@@ -35,6 +35,6 @@ pub fn generate_token(username: &str) -> Result<String> {
     encode(
         &Header::default(),
         &claims,
-        &EncodingKey::from_secret(&CONFIG.jwt.clone().into_bytes()),
+        &EncodingKey::from_secret(&get_env_jwt().into_bytes()),
     )
 }

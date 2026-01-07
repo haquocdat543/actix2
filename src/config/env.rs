@@ -1,32 +1,25 @@
-use dotenvy::dotenv;
-use once_cell::sync::Lazy;
-
-use std::env;
-
-#[derive(Debug, Clone)]
-pub struct Config {
-    pub host: String,
-    pub port: u16,
-    pub database_url: String,
-    pub jwt: String,
+#[inline]
+pub fn get_env(env_name: &str) -> String {
+    std::env::var(env_name)
+        .unwrap_or_else(|_| panic!("[{}] environment variable must be set", env_name))
 }
 
-// Lazily initialized global CONFIG instance
-pub static CONFIG: Lazy<Config> = Lazy::new(|| {
-    dotenv().ok(); // Load `.env` once
+#[inline]
+pub fn get_env_host() -> String {
+    get_env("HOST")
+}
 
-    let host = env::var("HOST").unwrap_or_else(|_| "127.0.0.1".to_string());
-    let port = env::var("PORT")
-        .unwrap_or_else(|_| "8080".to_string())
-        .parse()
-        .expect("PORT must be a number");
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let jwt = env::var("JWT").expect("JWT must be set");
+#[inline]
+pub fn get_env_port() -> String {
+    get_env("PORT")
+}
 
-    Config {
-        host,
-        port,
-        database_url,
-        jwt,
-    }
-});
+#[inline]
+pub fn get_env_database_url() -> String {
+    get_env("DATABASE_URL")
+}
+
+#[inline]
+pub fn get_env_jwt() -> String {
+    get_env("JWT")
+}
