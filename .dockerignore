@@ -9,6 +9,7 @@
 
 # Rust
 **/target
+**/migration
 
 # Git
 **/.github
