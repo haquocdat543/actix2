@@ -38,3 +38,12 @@ pub fn generate_token(username: &str) -> Result<String> {
         &EncodingKey::from_secret(&get_env_jwt().into_bytes()),
     )
 }
+
+#[cfg(test)]
+#[allow(clippy::assertions_on_constants)]
+mod tests {
+    #[test]
+    fn sanity() {
+        assert!(true);
+    }
+}
