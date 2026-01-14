@@ -1,15 +1,18 @@
-name: Security audit
-
+name: Unused dependency check
 on:
-  pull_request:
   push:
+  pull_request:
 
 permissions:
   issues: write
   checks: write
 
+env:
+  TOOLCHAIN_VERSION: nightly-2025-01-01
+  COMPONENTS: rustfmt, clippy
+
 jobs:
-  security_audit:
+  udeps:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,6 +28,15 @@ jobs:
           key: rust-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}-${{ github.run_id }}
           restore-keys: |
             rust-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}-
-      - uses: rustsec/audit-check@v1.4.1
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@nightly
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          toolchain: ${{ env.TOOLCHAIN_VERSION }}
+          components: ${{ env.COMPONENTS }}
+
+      - name: Run cargo-udeps
+        uses: aig787/cargo-udeps-action@v1
+        with:
+          version: "latest"
+          args: "--all-targets"
