@@ -1,6 +1,3 @@
-[build]
-rustc-wrapper = "sccache"
-
 [alias]
 b = "build"
 c = "check"
