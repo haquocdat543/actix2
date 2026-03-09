@@ -2,6 +2,8 @@
 
 FROM rust:1.89-slim AS base
 
+ENV RUSTFLAGS="-C link-arg=-s"
+
 RUN apt-get update -y && apt-get install -y \
 	build-essential \
 	musl-tools \
@@ -54,8 +56,8 @@ RUN \
 	--target aarch64-unknown-linux-musl \
 	--offline
 
-RUN strip --strip-unneeded target/aarch64-unknown-linux-musl/release/app
-RUN upx --best target/aarch64-unknown-linux-musl/release/app
+RUN strip --strip-unneeded target/aarch64-unknown-linux-musl/release/app && \
+	upx --ultra-brute --lzma target/aarch64-unknown-linux-musl/release/app
 
 FROM scratch
 
