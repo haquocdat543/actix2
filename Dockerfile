@@ -5,8 +5,8 @@ FROM rust:1.89-slim AS base
 RUN apt-get update -y && apt-get install -y \
 	build-essential \
 	musl-tools \
-	libssl-dev \
 	pkg-config \
+	upx \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN rustup target add aarch64-unknown-linux-musl
@@ -54,7 +54,8 @@ RUN \
 	--target aarch64-unknown-linux-musl \
 	--offline
 
-RUN strip target/aarch64-unknown-linux-musl/release/app
+RUN strip --strip-unneeded target/aarch64-unknown-linux-musl/release/app
+RUN upx --best target/aarch64-unknown-linux-musl/release/app
 
 FROM scratch
 
