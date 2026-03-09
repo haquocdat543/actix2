@@ -8,9 +8,8 @@ license = "MIT OR Apache-2.0"
 actix-web = "4.12.1"
 sea-orm = { version = "1.1.19", features = [
   "sqlx-postgres",
-  "runtime-tokio-native-tls",
+  "runtime-tokio-rustls",
 ] }
-sea-orm-migration = "1.1.19"
 tokio = { version = "1.49.0", features = ["rt-multi-thread", "macros"] }
 actix-rt = "2.11.0"
 serde = { version = "1.0.228", features = ["derive"] }
@@ -24,7 +23,6 @@ bcrypt = "0.18.0"
 chrono = { version = "0.4.42", features = ["serde"] } # ← must be here!
 env_logger = "0.11.8" # or latest
 log = "0.4.29"
-openssl = { version = "0.10.75", features = ["vendored"] }
 
 [profile.release]
 opt-level = 3
